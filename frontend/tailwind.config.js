@@ -13,8 +13,10 @@ module.exports = {
         'darkBrown' : '#A2816E',
         'navyBlue' : '#263C6B',
         'lightNavy' : '#385CAA',
+        'darkNavy' : '#243864',
         'lightBrown' : '#B29E7F',
-        'orange' : '#FE6B3D'
+        'orange' : '#FE6B3D',
+        'darkOrange' : '#EE5D30'
       },
       screens: {
         '2xl' : '1320px'
