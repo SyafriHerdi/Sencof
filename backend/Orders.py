@@ -150,7 +150,7 @@ def update_orders():
 		data = request.json
 		orderID = data["orderID"]
 
-		query = "UPDATE product SET orderID = %s "
+		query = "UPDATE orders SET orderID = %s "
 		values = (orderID, )
 
 		if "orderID_ubah" in data:
