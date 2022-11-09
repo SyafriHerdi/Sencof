@@ -127,8 +127,8 @@ def insert_user_info():
 	try:
 		data = request.json
 
-		query = "INSERT INTO user_info(infoID, userID, phone, address, city, zipcode) VALUES(%s,%s,%s,%s,%s,%s)"
-		values = (data["infoID"], data["userID"], data["phone"], data["address"], data["city"], data["zipcode"])
+		query = "INSERT INTO user_info(infoID, userID, fullname, phone, address, city, zipcode) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+		values = (data["infoID"], data["userID"], data["fullname"], data["phone"], data["address"], data["city"], data["zipcode"])
 		mycursor = mydb.cursor()
 		mycursor.execute(query, values)
 		mydb.commit()
