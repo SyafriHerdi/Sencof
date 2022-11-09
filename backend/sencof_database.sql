@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2022 at 08:14 AM
+-- Generation Time: Nov 09, 2022 at 10:15 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -51,8 +51,15 @@ CREATE TABLE `orders` (
   `UserID` int(11) NOT NULL,
   `statusID` int(11) NOT NULL,
   `total_harga` int(11) NOT NULL,
-  `waktu_order` date NOT NULL
+  `waktu_order` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`orderID`, `UserID`, `statusID`, `total_harga`, `waktu_order`) VALUES
+(1, 2, 1, 840000, '2022-11-08 16:00:00');
 
 -- --------------------------------------------------------
 
@@ -66,6 +73,13 @@ CREATE TABLE `order_detail` (
   `id_coffee` int(11) NOT NULL,
   `jumlah` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `order_detail`
+--
+
+INSERT INTO `order_detail` (`id_order_detail`, `orderID`, `id_coffee`, `jumlah`) VALUES
+(1, 1, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -166,6 +180,13 @@ CREATE TABLE `user_info` (
   `city` varchar(255) NOT NULL,
   `zipcode` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_info`
+--
+
+INSERT INTO `user_info` (`infoID`, `userID`, `fullname`, `phone`, `address`, `city`, `zipcode`) VALUES
+(1, 2, 'Syafri Herdiansyah', '082242638788', 'Perumahan Sumburboto Indah', 'Semarang', '50269');
 
 --
 -- Indexes for dumped tables
