@@ -67,7 +67,7 @@ def login_user():
 	return jsonify(access_token=access_token)
 
 @app.route('/get_product', methods=['GET'])
-@jwt_required()
+
 def get_product():
 	# Awal Query
 	query = "SELECT * FROM product WHERE 1=1"
