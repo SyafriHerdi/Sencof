@@ -16,4 +16,8 @@
     │   ├── readme.md
     │   ├── tailwind.config.js
     ├── Backend                 # Include BE's code
-    │   ├── ???
+    │   ├── Category.py
+    │   ├── Order_detail.py
+    │   ├── Orders.py
+    │   ├── Product.py
+    │   ├── user_info.py
