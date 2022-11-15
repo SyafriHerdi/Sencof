@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2022 at 10:15 AM
+-- Generation Time: Nov 15, 2022 at 01:12 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -38,7 +38,8 @@ CREATE TABLE `category_coffee` (
 --
 
 INSERT INTO `category_coffee` (`CategoryID`, `nama_category`, `deskripsi_category`) VALUES
-(1, 'Arabica', 'Pohon Kopi Arabika memiliki perakaran yang dangkal, Tanaman Kopi Arabika memiliki daun yang kecil,Buah Kopi Arabika lebih besar dibanding robusta.');
+(2, 'Arabica', 'Pohon Kopi Arabika memiliki perakaran yang dangkal, Tanaman Kopi Arabika memiliki daun yang kecil,Buah Kopi Arabika lebih besar dibanding robusta.'),
+(3, 'Arabica', 'Pohon Kopi Arabika memiliki perakaran yang dangkal, Tanaman Kopi Arabika memiliki daun yang kecil,Buah Kopi Arabika lebih besar dibanding robusta.');
 
 -- --------------------------------------------------------
 
@@ -54,13 +55,6 @@ CREATE TABLE `orders` (
   `waktu_order` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`orderID`, `UserID`, `statusID`, `total_harga`, `waktu_order`) VALUES
-(1, 2, 1, 840000, '2022-11-08 16:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -73,13 +67,6 @@ CREATE TABLE `order_detail` (
   `id_coffee` int(11) NOT NULL,
   `jumlah` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `order_detail`
---
-
-INSERT INTO `order_detail` (`id_order_detail`, `orderID`, `id_coffee`, `jumlah`) VALUES
-(1, 1, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -97,14 +84,6 @@ CREATE TABLE `product` (
   `file_gambar_coffee` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `product`
---
-
-INSERT INTO `product` (`id_coffee`, `CategoryID`, `nama_coffee`, `deskripsi_coffee`, `stock`, `harga_per_kg`, `file_gambar_coffee`) VALUES
-(1, 1, 'Kopi Toraja', 'kopi ini memiliki aroma khas seperti aroma tanah. Rasa pahitnya menonjol, namun dengan kadar asam yang rendah, tidak bikin mual ketika meminumnya', '20 kg box', 280000, 'kopi_toraja'),
-(2, 1, 'Kopi Gayo', 'Kopi Gayo cenderung memiliki rasa yang tidak pahit disertai tingkat keasaman yang rendah.', '30 kg box', 270000, 'kopi_gayo');
-
 -- --------------------------------------------------------
 
 --
@@ -112,7 +91,6 @@ INSERT INTO `product` (`id_coffee`, `CategoryID`, `nama_coffee`, `deskripsi_coff
 --
 
 CREATE TABLE `role` (
-  `roleID` int(12) NOT NULL,
   `roleName` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -120,9 +98,9 @@ CREATE TABLE `role` (
 -- Dumping data for table `role`
 --
 
-INSERT INTO `role` (`roleID`, `roleName`) VALUES
-(1, 'Admin'),
-(2, 'Customer');
+INSERT INTO `role` (`roleName`) VALUES
+('admin'),
+('customer');
 
 -- --------------------------------------------------------
 
@@ -152,18 +130,23 @@ INSERT INTO `status` (`statusID`, `statusName`) VALUES
 
 CREATE TABLE `user` (
   `userID` int(12) NOT NULL,
+  `roleName` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `roleID` int(12) NOT NULL
+  `Time Stamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`userID`, `username`, `password`, `roleID`) VALUES
-(1, 'admin', '7bc6c31880aeda581aa34e218af25753', 1),
-(2, 'herdi', 'b22c7bcf242fca9d1d983f4c18429cf1', 2);
+INSERT INTO `user` (`userID`, `roleName`, `username`, `password`, `Time Stamp`) VALUES
+(3, 'admin', 'admin', '$2b$12$t6KYCh1mZoKp7zzIvR4XTOiMjnSc2TALoVki2Jt7Fz.mzSzyFj1Fe', '2022-11-15 03:04:22'),
+(4, 'admin', 'admin1', '$2b$12$zqXR5stxeKjq6E0XuDL8OuTVa8iYMyIuqW9E6dudDDdUOKYzGacVa', '2022-11-15 03:04:41'),
+(5, 'admin', 'admin2', '$2b$12$sAc6KtLulrURv34RFsJeLecQxOxRbUJ0wSYNoc29/U2w.cWioTh7q', '2022-11-15 03:04:46'),
+(6, 'customer', 'admin2', '$2b$12$YmgGDhe0rRJuaUyPJgTwyO8kQnbHQmhZpVRnZ061e1huiBloszF7a', '2022-11-15 06:51:10'),
+(7, 'customer', 'admin2', '$2b$12$ssiMj68TSk1vPjrq/mi6dujaztf9r6u4aDKDYaCD3EKtvQdBRQMt.', '2022-11-15 07:10:55'),
+(8, 'customer', 'pierro', '$2b$12$M52OR1Nh/UKWMgWB/vQtOOiJufDwYfQVBmkTeJE01b0V1Ji8J7ZKu', '2022-11-15 10:01:49');
 
 -- --------------------------------------------------------
 
@@ -182,13 +165,6 @@ CREATE TABLE `user_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `user_info`
---
-
-INSERT INTO `user_info` (`infoID`, `userID`, `fullname`, `phone`, `address`, `city`, `zipcode`) VALUES
-(1, 2, 'Syafri Herdiansyah', '082242638788', 'Perumahan Sumburboto Indah', 'Semarang', '50269');
-
---
 -- Indexes for dumped tables
 --
 
@@ -203,8 +179,8 @@ ALTER TABLE `category_coffee`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`orderID`),
-  ADD KEY `statusID` (`statusID`),
-  ADD KEY `UserID` (`UserID`);
+  ADD KEY `UserID` (`UserID`),
+  ADD KEY `statusID` (`statusID`);
 
 --
 -- Indexes for table `order_detail`
@@ -225,7 +201,7 @@ ALTER TABLE `product`
 -- Indexes for table `role`
 --
 ALTER TABLE `role`
-  ADD PRIMARY KEY (`roleID`);
+  ADD PRIMARY KEY (`roleName`);
 
 --
 -- Indexes for table `status`
@@ -238,7 +214,7 @@ ALTER TABLE `status`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`userID`),
-  ADD KEY `roleID` (`roleID`);
+  ADD KEY `roleName` (`roleName`);
 
 --
 -- Indexes for table `user_info`
@@ -248,6 +224,16 @@ ALTER TABLE `user_info`
   ADD KEY `userID` (`userID`);
 
 --
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `userID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -255,8 +241,8 @@ ALTER TABLE `user_info`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`statusID`) REFERENCES `status` (`statusID`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `user` (`userID`);
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `user` (`userID`),
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`statusID`) REFERENCES `status` (`statusID`);
 
 --
 -- Constraints for table `order_detail`
@@ -275,7 +261,7 @@ ALTER TABLE `product`
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`roleID`) REFERENCES `role` (`roleID`);
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`roleName`) REFERENCES `role` (`roleName`);
 
 --
 -- Constraints for table `user_info`
