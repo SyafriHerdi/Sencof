@@ -146,10 +146,9 @@ def get_order_detail():
 def insert_order_detail():
 	hasil = {"status": "gagal insert data order detail"}
 
-	userID = str(get_jwt()["userID"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
@@ -176,10 +175,9 @@ def insert_order_detail():
 def update_order_detail():
 	hasil = {"status": "gagal update data order detail"}
 	
-	userID = str(get_jwt()["userID"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 	
 	try:
@@ -222,10 +220,9 @@ def update_order_detail():
 def delete_order_detail(id_order_detail):
 	hasil = {"status": "gagal hapus data order detail"}
 
-	userID = str(get_jwt()["userID"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
