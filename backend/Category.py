@@ -52,6 +52,7 @@ def login_user():
 
 		username = data_user[0]
 		pw = data_user[1].encode()
+		roleName = data_user[0]
 
 		if bcrypt.checkpw(password, pw) == False:
 			return make_response(jsonify(deskripsi="Password Salah"), 401)
@@ -60,7 +61,7 @@ def login_user():
 		session["password"] = pw
 
 		jwt_payload = {
-			"username"	: username
+			"roleName"	: roleName
 	}
 		access_token = create_access_token(username, additional_claims=jwt_payload)
 		return jsonify(access_token=access_token)
@@ -88,6 +89,23 @@ def register():
 		}
 
 	return jsonify(hasil)
+
+@app.route('/about')
+def about():
+    if 'username' in session:
+        return "Selamat Datang di About"
+    else:
+        return "Selamat Datang di Website Sencof"
+@app.route('/contact')
+def contact():
+    if 'username' in session:
+        return "Selamat Datang di Contact"
+    else:
+        return "Selamat Datang di Website Sencof"
+@app.route('/logout')
+def logout():
+    session.clear()
+    return "Selamat Datang di Website Sencof" 
 
 @app.route('/get_category_coffee', methods=['GET'])
 @jwt_required()
@@ -125,10 +143,9 @@ def get_category_coffee():
 def insert_category_coffee():
 	hasil = {"status": "gagal insert data category coffee"}
 
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
@@ -155,10 +172,9 @@ def insert_category_coffee():
 def update_category_coffee():
 	hasil = {"status": "gagal update data category coffee"}
 	
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 	
 	try:
@@ -197,10 +213,9 @@ def update_category_coffee():
 def delete_category_coffee(CategoryID):
 	hasil = {"status": "gagal hapus data category coffee"}
 
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
