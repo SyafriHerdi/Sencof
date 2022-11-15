@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, make_response
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, JWTManager
 import pymysql
 import datetime
-import hashlib
+import bcrypt
 
 # Membuat server Flask
 app = Flask(__name__)
@@ -20,51 +20,91 @@ mydb = pymysql.connect(
 	passwd="",
 	database="sencof_database"
 )
+# declare constants 
+ADMIN = "admin"
+CUSTOMER = "customer"
 
 # Routing Index
 @app.route('/')
-@app.route('/index')
-def index():
+@app.route('/home')
+def home():
 	return "Selamat Datang di Website Sencof"
 
 @app.route("/login_user", methods=["POST"])
 def login_user():
-	data = request.json
+		username = request.json["username"]
+		password = request.json["password"].encode('utf-8')
+		
+		# Cek kredensial didalam database
+		query = " SELECT username,password FROM user WHERE username = %s "
+		values = (username, )
 
-	username = data["username"]
-	password = data["password"]
+		mycursor = mydb.cursor()
+		mycursor.execute(query, values)
+		data_user = mycursor.fetchone()
+		mydb.commit()
+		mycursor.close()
+		print(data_user)
+		
+		if len(data_user) == 0:
+			return make_response(jsonify(deskripsi="Username tidak ditemukan"), 401)
 
-	username = username.lower()
-	password_enc = hashlib.md5(password.encode('utf-8')).hexdigest() # Convert password to md5
+		username = data_user[0]
+		pw = data_user[1].encode()
+		roleName = data_user[0]
 
-	# Cek kredensial didalam database
-	query = " SELECT user_id, password, roleID FROM user WHERE username = %s "
-	values = (username, )
+		if bcrypt.checkpw(password, pw) == False:
+			return make_response(jsonify(deskripsi="Password Salah"), 401)
 
-	mycursor = mydb.cursor()
-	mycursor.execute(query, values)
-	data_user = mycursor.fetchall()
+		session["username"] = username
+		session["password"] = pw
 
-	if len(data_user) == 0:
-		return make_response(jsonify(deskripsi="Username tidak ditemukan"), 401)
-
-	data_user	= data_user[0]
-
-	db_user_id = data_user[0]
-	db_password = data_user[1]
-	db_roleID		= data_user[2]
-	
-	if password_enc != db_password:
-		return make_response(jsonify(deskripsi="Password salah"), 401)
-
-	jwt_payload = {
-		"user_id" : db_user_id,
-		"roleID" : db_roleID
+		jwt_payload = {
+			"roleName"	: roleName
 	}
+		access_token = create_access_token(username, additional_claims=jwt_payload)
+		return jsonify(access_token=access_token)
 
-	access_token = create_access_token(username, additional_claims=jwt_payload)
+@app.route("/register", methods=["POST"])
+def register():
+	hasil = {"status": "gagal insert registrasi akun"}
 
-	return jsonify(access_token=access_token)
+	try:
+		username = request.json["username"]
+		password = request.json["password"].encode('utf-8')
+		hash_password = bcrypt.hashpw(password, bcrypt.gensalt())
+		roleName = CUSTOMER
+
+		# Cek kredensial didalam database
+		mycursor = mydb.cursor()
+		mycursor.execute("INSERT INTO user (username,password,roleName) VALUES (%s,%s,%s)" , (username,hash_password,CUSTOMER))
+		mydb.commit()
+		hasil = {"status": "berhasil insert registrasi akun"}
+	except Exception as e:
+		print("Error: " + str(e))
+		hasil = {
+			"status": "gagal insert registrasi akun",
+			"error" : str(e)
+		}
+
+	return jsonify(hasil)
+
+@app.route('/about')
+def about():
+    if 'username' in session:
+        return "Selamat Datang di About"
+    else:
+        return "Selamat Datang di Website Sencof"
+@app.route('/contact')
+def contact():
+    if 'username' in session:
+        return "Selamat Datang di Contact"
+    else:
+        return "Selamat Datang di Website Sencof"
+@app.route('/logout')
+def logout():
+    session.clear()
+    return "Selamat Datang di Website Sencof"
 
 @app.route('/get_product', methods=['GET'])
 @jwt_required()
@@ -118,10 +158,9 @@ def get_product():
 def insert_product():
 	hasil = {"status": "gagal insert data coffee been"}
 
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
@@ -149,10 +188,9 @@ def insert_product():
 def update_product():
 	hasil = {"status": "gagal update data coffee been"}
 	
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 	
 	try:
@@ -202,10 +240,9 @@ def update_product():
 def delete_product(id_coffee_been):
 	hasil = {"status": "gagal hapus data coffee been"}
 
-	user_id = str(get_jwt()["user_id"])
-	roleID 	= str(get_jwt()["roleID"])
+	roleName = str(get_jwt()["roleName"])
 
-	if roleID != "1":
+	if roleName != ADMIN:
 		return make_response(jsonify(deskripsi="Harap gunakan akun admin"), 401)
 
 	try:
