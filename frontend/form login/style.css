@@ -1,0 +1,56 @@
+*{
+    font-family: 'Inter', sans-serif;
+}
+.from-left .header h1{
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    color: black;
+    margin-bottom: 50px;
+
+}
+.login{
+    height: 100vh;
+}
+.login-from label{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 24px;
+    color: black;
+    margin-top: 25px;
+}
+.login-from input{
+    background:rgb(221, 218, 218) ;
+    border: 1px solid rgb(221, 218, 218);
+    box-sizing:border-box;
+}
+.login-from a{
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 21px;
+    color: #000000;
+}
+.login-from .singin{
+    background: #263C6B;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    height: 40px;
+    width: 150px;
+    margin-top: 25px;
+    color: white;
+    
+}
+.login-from .los{
+    background: white;
+    border: none;
+    font-weight: 700;
+    margin-left: 25px;
+    font-size:15px;
+    color: #263C6B;
+}
